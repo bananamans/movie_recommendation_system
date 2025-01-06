@@ -175,7 +175,7 @@ def recommend(new_df, movie, pickle_file_path):
         zip(candidate_movies.index, candidate_movies['predicted_rating']),
         key=lambda x: x[1],
         reverse=True
-    )[:25]
+    )[:30]
     # print(hybrid_recommendations)
 
     rec_movie_list = []
