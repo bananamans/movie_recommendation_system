@@ -8,12 +8,21 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from surprise import Reader, Dataset, SVD
+from surprise.model_selection import train_test_split
 
 # Object for porterStemmer
 ps = PorterStemmer()
 nltk.download('stopwords')
 import streamlit as st
 
+# Training SVD for collaborative filtering
+reader = Reader()
+ratings = pd.read_csv(r'Files/ratings_small.csv')
+data = Dataset.load_from_df(ratings[['userId', 'movieId', 'rating']], reader)
+trainset, testset = train_test_split(data, test_size=0.2)
+svd = SVD()
+svd.fit(trainset)
 
 def get_genres(obj):
     lista = ast.literal_eval(obj)
@@ -142,18 +151,37 @@ def fetch_posters(movie_id):
 
 
 def recommend(new_df, movie, pickle_file_path):
+    
     with open(pickle_file_path, 'rb') as pickle_file:
         similarity_tags = pickle.load(pickle_file)
 
     movie_idx = new_df[new_df['title'] == movie].index[0]
+    # print(movie)
+    # print(movie_idx)
 
-    # Getting the top 25 movies from the list which are most similar
-    movie_list = sorted(list(enumerate(similarity_tags[movie_idx])), reverse=True, key=lambda x: x[1])[1:26]
+    content_based_candidates = sorted(list(enumerate(similarity_tags[movie_idx])), reverse=True, key=lambda x: x[1])[1:51]
+    # print(content_based_candidates)
+
+    candidate_indices = [i[0] for i in content_based_candidates]
+    candidate_movies = new_df.iloc[candidate_indices][['movie_id', 'title']]
+
+    user_id = 1
+    candidate_movies['predicted_rating'] = candidate_movies['movie_id'].apply(
+        lambda x: svd.predict(user_id, x).est
+    )
+
+    # Rank the movies by predicted rating
+    hybrid_recommendations = sorted(
+        zip(candidate_movies.index, candidate_movies['predicted_rating']),
+        key=lambda x: x[1],
+        reverse=True
+    )[:25]
+    # print(hybrid_recommendations)
 
     rec_movie_list = []
     rec_poster_list = []
 
-    for i in movie_list:
+    for i in hybrid_recommendations:
         rec_movie_list.append(new_df.iloc[i[0]]['title'])
         rec_poster_list.append(fetch_posters(new_df.iloc[i[0]]['movie_id']))
 

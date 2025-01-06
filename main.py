@@ -26,7 +26,7 @@ def main():
             menu_title='What are you looking for? 👀',
             options=['Home', 'Describe me a movie', 'Check all Movies'],
             icons=['house', 'film', 'film'],
-            menu_icon='list',
+            menu_icon='cast',
             orientation="horizontal",
         )
 
@@ -41,7 +41,7 @@ def main():
 
     def recommend_display():
 
-        st.title('Movie Recommender System')
+        st.title('Movie Recommendation System')
 
         selected_movie_name = st.selectbox(
             'Select a Movie...', new_df['title'].values
@@ -50,48 +50,48 @@ def main():
         rec_button = st.button('Recommend')
         if rec_button:
             st.session_state.selected_movie_name = selected_movie_name
-            recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_tags.pkl',"are")
-            recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_genres.pkl',"on the basis of genres are")
-            recommendation_tags(new_df, selected_movie_name,
-                                r'Files/similarity_tags_tprduction_comp.pkl',"from the same production company are")
-            recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_keywords.pkl',"on the basis of keywords are")
-            recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_tcast.pkl',"on the basis of cast are")
+            st.subheader(f'Best Recommendations are...')
+            recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_tags.pkl')
+            # recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_genres.pkl',"on the basis of genres are")
+            # recommendation_tags(new_df, selected_movie_name,
+            #                     r'Files/similarity_tags_tprduction_comp.pkl',"from the same production company are")
+            # recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_keywords.pkl',"on the basis of keywords are")
+            # recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_tcast.pkl',"on the basis of cast are")
 
-    def recommendation_tags(new_df, selected_movie_name, pickle_file_path,str):
+    def recommendation_tags(new_df, selected_movie_name, pickle_file_path):
 
         movies, posters = preprocess.recommend(new_df, selected_movie_name, pickle_file_path)
-        st.subheader(f'Best Recommendations {str}...')
+        # st.subheader(f'Best Recommendations {str}...')
 
         rec_movies = []
         rec_posters = []
         cnt = 0
-        # Adding only 5 uniques recommendations
+
         for i, j in enumerate(movies):
-            if cnt == 5:
-                break
             if j not in displayed:
                 rec_movies.append(j)
                 rec_posters.append(posters[i])
                 displayed.append(j)
                 cnt += 1
 
+        for i in range(0,5):
         # Columns to display informations of movies i.e. movie title and movie poster
-        col1, col2, col3, col4, col5 = st.columns(5)
-        with col1:
-            st.text(rec_movies[0])
-            st.image(rec_posters[0])
-        with col2:
-            st.text(rec_movies[1])
-            st.image(rec_posters[1])
-        with col3:
-            st.text(rec_movies[2])
-            st.image(rec_posters[2])
-        with col4:
-            st.text(rec_movies[3])
-            st.image(rec_posters[3])
-        with col5:
-            st.text(rec_movies[4])
-            st.image(rec_posters[4])
+            col1, col2, col3, col4, col5 = st.columns(5)
+            with col1:
+                st.text(rec_movies[0 + i * 5])
+                st.image(rec_posters[0 + i * 5])
+            with col2:
+                st.text(rec_movies[1 + i * 5])
+                st.image(rec_posters[1 + i * 5])
+            with col3:
+                st.text(rec_movies[2 + i * 5])
+                st.image(rec_posters[2 + i * 5])
+            with col4:
+                st.text(rec_movies[3 + i * 5])
+                st.image(rec_posters[3 + i * 5])
+            with col5:
+                st.text(rec_movies[4 + i * 5])
+                st.image(rec_posters[4 + i * 5])
 
     def display_movie_details():
 
