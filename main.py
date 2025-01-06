@@ -96,6 +96,8 @@ def main():
     def display_movie_details():
 
         selected_movie_name = st.session_state.selected_movie_name
+        if not selected_movie_name:
+            return
         # movie_id = movies[movies['title'] == selected_movie_name]['movie_id']
         info = preprocess.get_details(selected_movie_name)
 
