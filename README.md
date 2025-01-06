@@ -29,7 +29,7 @@ Our Movie Recommender System, built using Python and Natural Language Processing
 ## Try the App
 
 Explore the Movie Recommender System yourself! Our app is deployed on Streamlit. Click the link below to get started:
-[**Movie Recommender System App**](https://movie-recommender-syst.streamlit.app/)
+[**Movie Recommender System App**](https://movierecommendationsystem-vzzxkmoyadwpe85ynyx7jx.streamlit.app//)
 
 
 **Note**: When running the application for the first time, it may take some time as it creates necessary files and initializes the environment.
