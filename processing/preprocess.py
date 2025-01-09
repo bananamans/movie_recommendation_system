@@ -150,7 +150,7 @@ def fetch_posters(movie_id):
     return str_
 
 
-def recommend(new_df, movie, pickle_file_path):
+def recommend(new_df, movie, pickle_file_path, user_id):
     
     with open(pickle_file_path, 'rb') as pickle_file:
         similarity_tags = pickle.load(pickle_file)
@@ -165,9 +165,9 @@ def recommend(new_df, movie, pickle_file_path):
     candidate_indices = [i[0] for i in content_based_candidates]
     candidate_movies = new_df.iloc[candidate_indices][['movie_id', 'title']]
 
-    user_id = 1
+    userID = user_id
     candidate_movies['predicted_rating'] = candidate_movies['movie_id'].apply(
-        lambda x: svd.predict(user_id, x).est
+        lambda x: svd.predict(userID, x).est
     )
 
     # Rank the movies by predicted rating

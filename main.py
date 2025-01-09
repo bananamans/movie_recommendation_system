@@ -42,7 +42,9 @@ def main():
     def recommend_display():
 
         st.title('Movie Recommendation System')
-
+        user_id = st.selectbox(
+            'Enter User Id...', [1,2,3,4,5,6,7,8,9,10]
+        )
         selected_movie_name = st.selectbox(
             'Select a Movie...', new_df['title'].values
         )
@@ -51,16 +53,16 @@ def main():
         if rec_button:
             st.session_state.selected_movie_name = selected_movie_name
             st.subheader(f'Best Recommendations are...')
-            recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_tags.pkl')
+            recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_tags.pkl', user_id)
             # recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_genres.pkl',"on the basis of genres are")
             # recommendation_tags(new_df, selected_movie_name,
             #                     r'Files/similarity_tags_tprduction_comp.pkl',"from the same production company are")
             # recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_keywords.pkl',"on the basis of keywords are")
             # recommendation_tags(new_df, selected_movie_name, r'Files/similarity_tags_tcast.pkl',"on the basis of cast are")
 
-    def recommendation_tags(new_df, selected_movie_name, pickle_file_path):
+    def recommendation_tags(new_df, selected_movie_name, pickle_file_path, user_id):
 
-        movies, posters = preprocess.recommend(new_df, selected_movie_name, pickle_file_path)
+        movies, posters = preprocess.recommend(new_df, selected_movie_name, pickle_file_path, user_id)
         # st.subheader(f'Best Recommendations {str}...')
 
         rec_movies = []
