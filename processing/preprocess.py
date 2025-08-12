@@ -149,7 +149,7 @@ def fetch_posters(movie_id):
 
     return str_
 
-
+# Main Function for the Hyrid Recommendation System
 def recommend(new_df, movie, pickle_file_path, user_id):
     
     with open(pickle_file_path, 'rb') as pickle_file:
